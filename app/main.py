@@ -17,6 +17,7 @@ from .scanner.runner import run_scan, scanner_loop
 from .scoring import compute_score
 from .storage import init_db, save_signal
 from .telegram import send_message
+from .telegram_bot import handle_update as handle_telegram_update
 
 logging.basicConfig(level=logging.INFO)
 
@@ -136,6 +137,13 @@ async def health() -> dict[str, str]:
 async def trigger_scan() -> dict[str, str]:
     asyncio.create_task(run_scan())
     return {"status": "scan triggered"}
+
+
+@app.post("/telegram/webhook")
+async def telegram_webhook(request: Request) -> dict[str, str]:
+    update = await request.json()
+    asyncio.create_task(handle_telegram_update(update))
+    return {"ok": "true"}
 
 
 def _parse_tradingview_text(text: str) -> dict[str, Any] | None:
