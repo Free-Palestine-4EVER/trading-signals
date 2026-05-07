@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     anthropic_api_key: str | None = None
     gemini_api_key: str | None = None
     groq_api_key: str | None = None
+    finnhub_api_key: str | None = None
 
     reddit_client_id: str | None = None
     reddit_client_secret: str | None = None

@@ -1,0 +1,59 @@
+{
+  "scan_interval_minutes": 15,
+  "tickers": [
+    "AAPL",
+    "TSLA",
+    "NVDA",
+    "MSFT",
+    "GOOGL",
+    "META",
+    "AMZN",
+    "AMD",
+    "SPY",
+    "QQQ"
+  ],
+  "conditions": [
+    {
+      "name": "RSI Oversold",
+      "type": "rsi_below",
+      "threshold": 30,
+      "action": "buy"
+    },
+    {
+      "name": "RSI Overbought",
+      "type": "rsi_above",
+      "threshold": 70,
+      "action": "sell"
+    },
+    {
+      "name": "Volume Spike",
+      "type": "volume_ratio_above",
+      "threshold": 2.5,
+      "action": "buy"
+    },
+    {
+      "name": "Above SMA50",
+      "type": "price_crosses_above_sma",
+      "threshold": 50,
+      "action": "buy"
+    },
+    {
+      "name": "Below SMA50",
+      "type": "price_crosses_below_sma",
+      "threshold": 50,
+      "action": "sell"
+    },
+    {
+      "name": "High HV Rank",
+      "type": "hv_rank_above",
+      "threshold": 80,
+      "action": "info"
+    },
+    {
+      "name": "Earnings Soon",
+      "type": "earnings_within_days",
+      "threshold": 7,
+      "action": "info"
+    }
+  ]
+}

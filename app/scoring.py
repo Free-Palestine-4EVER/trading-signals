@@ -47,7 +47,7 @@ def _score_technical(market: MarketSnapshot | None, action: str) -> float:
     return max(0.0, min(100.0, s))
 
 
-def _score_options(opts: OptionsSnapshot | None, action: str) -> float:
+def _score_options(opts: OptionsSnapshot | None, market: MarketSnapshot | None, action: str) -> float:
     if not opts:
         return 50.0
 
@@ -66,6 +66,16 @@ def _score_options(opts: OptionsSnapshot | None, action: str) -> float:
         s += 10
     elif not bullish and opts.put_volume > opts.call_volume * 2:
         s += 10
+
+    if market and market.hv_rank is not None:
+        if market.hv_rank > 70:
+            s += 5
+        elif market.hv_rank < 20:
+            s -= 5
+
+    if market and market.days_to_earnings is not None:
+        if 0 <= market.days_to_earnings <= 7:
+            s -= 10
 
     return max(0.0, min(100.0, s))
 
@@ -108,7 +118,7 @@ def compute_score(
     social: SocialSnapshot | None,
 ) -> Score:
     tech = _score_technical(market, action)
-    opt = _score_options(options, action)
+    opt = _score_options(options, market, action)
     nws = _score_news(news)
     sent = _score_sentiment(social)
 
