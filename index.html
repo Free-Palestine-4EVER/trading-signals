@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>White Ornate Coffin – AR Showcase</title>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #080806 url('room.png') center center / cover no-repeat fixed;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 4, 2, 0.62);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    * { position: relative; z-index: 1; }
+
+    header {
+      width: 100%;
+      padding: 22px 32px 18px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(5,4,2,0.85) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(180,150,90,0.18);
+    }
+
+    header h1 {
+      font-size: clamp(1.3rem, 4vw, 2rem);
+      letter-spacing: 0.14em;
+      color: #d4b896;
+      text-transform: uppercase;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+    }
+
+    header p {
+      margin-top: 5px;
+      font-size: 0.82rem;
+      color: #a08860;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .viewer-wrap {
+      width: 100%;
+      max-width: 860px;
+      padding: 28px 16px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    model-viewer {
+      width: 100%;
+      height: min(68vh, 580px);
+      background: transparent;
+      border-radius: 18px 18px 0 0;
+      border: 1px solid rgba(180,150,90,0.25);
+      border-bottom: none;
+      --poster-color: transparent;
+    }
+
+    .scrubber-row {
+      width: 100%;
+      background: rgba(8, 7, 4, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(180,150,90,0.22);
+      border-top: none;
+      border-radius: 0 0 18px 18px;
+      padding: 14px 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .scrubber-label {
+      width: 100%;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      color: #7a6840;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .scrubber-label::before,
+    .scrubber-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(180,150,90,0.2);
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #9e7a40 var(--pct, 50%), rgba(180,150,90,0.2) var(--pct, 50%));
+      outline: none;
+      cursor: ew-resize;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #e8d090, #9e7a40);
+      border: 2px solid #080704;
+      box-shadow: 0 2px 10px rgba(158,122,64,0.7);
+      cursor: ew-resize;
+    }
+
+    input[type=range]::-moz-range-thumb {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #e8d090, #9e7a40);
+      border: 2px solid #080704;
+      box-shadow: 0 2px 10px rgba(158,122,64,0.7);
+      cursor: ew-resize;
+    }
+
+    .angle-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .angle-btn {
+      padding: 5px 14px;
+      border: 1px solid rgba(180,150,90,0.3);
+      background: transparent;
+      color: #9a8460;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .angle-btn:hover, .angle-btn.active {
+      background: #9e7a40;
+      color: #080704;
+      border-color: #9e7a40;
+    }
+
+    .controls-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .spin-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      color: #7a6840;
+      letter-spacing: 0.05em;
+      user-select: none;
+    }
+
+    .spin-toggle input { display: none; }
+
+    .spin-track {
+      width: 36px; height: 20px;
+      border-radius: 10px;
+      background: rgba(180,150,90,0.15);
+      position: relative;
+      transition: background 0.2s;
+      border: 1px solid rgba(180,150,90,0.25);
+    }
+
+    .spin-track::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #6a5830;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .spin-toggle input:checked + .spin-track { background: #9e7a40; border-color: #9e7a40; }
+    .spin-toggle input:checked + .spin-track::after { transform: translateX(16px); background: #fff; }
+
+    .bottom {
+      width: 100%;
+      max-width: 860px;
+      padding: 20px 16px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .ar-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 40px;
+      background: linear-gradient(135deg, #c8a86b 0%, #9e7a40 100%);
+      color: #080704;
+      border: none;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 28px rgba(200,168,107,0.4);
+    }
+
+    .ar-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(200,168,107,0.6); }
+    .ar-btn:active { transform: translateY(0); }
+    .ar-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    .hint {
+      font-size: 0.76rem;
+      color: rgba(200,180,140,0.6);
+      text-align: center;
+      letter-spacing: 0.03em;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 16px;
+      font-size: 0.7rem;
+      color: rgba(140,120,80,0.4);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>White Ornate Coffin</h1>
+  <p>360° View &nbsp;·&nbsp; AR Experience</p>
+</header>
+
+<div class="viewer-wrap">
+
+  <model-viewer
+    id="viewer"
+    src="coffin.glb"
+    alt="White Ornate Coffin 3D model"
+    shadow-intensity="1.6"
+    shadow-softness="0.6"
+    camera-controls
+    touch-action="pan-y"
+    auto-rotate
+    auto-rotate-delay="0"
+    rotation-per-second="18deg"
+    environment-image="neutral"
+    exposure="1.05"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    ar-scale="fixed"
+    ios-src="coffin.glb"
+  >
+    <button slot="ar-button" class="ar-btn" style="position:absolute;bottom:18px;left:50%;transform:translateX(-50%);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 3H3v2M19 3h2v2M5 21H3v-2M19 21h2v-2"/>
+        <rect x="7" y="7" width="10" height="10" rx="1"/>
+      </svg>
+      View in AR
+    </button>
+  </model-viewer>
+
+  <div class="scrubber-row">
+    <div class="scrubber-label">360° Rotation</div>
+    <input type="range" id="orbitScrubber" min="0" max="360" value="180" step="1" />
+    <div class="angle-row">
+      <button class="angle-btn" data-deg="0">Front</button>
+      <button class="angle-btn" data-deg="90">Left</button>
+      <button class="angle-btn" data-deg="180">Back</button>
+      <button class="angle-btn" data-deg="270">Right</button>
+      <button class="angle-btn" data-elevation="60">Top</button>
+      <button class="angle-btn" data-elevation="-5">Low</button>
+    </div>
+    <div class="controls-row">
+      <label class="spin-toggle">
+        <input type="checkbox" id="spinToggle" checked />
+        <span class="spin-track"></span>
+        Auto-spin
+      </label>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom">
+  <p class="hint">Open on your phone and tap <strong style="color:#c8a86b">View in AR</strong> to place it in your space.</p>
+</div>
+
+<footer>Powered by &lt;model-viewer&gt; · WebXR / Scene Viewer / Quick Look</footer>
+
+<script>
+  const viewer = document.getElementById('viewer');
+  const scrubber = document.getElementById('orbitScrubber');
+  const spinToggle = document.getElementById('spinToggle');
+
+  function updateTrack(val) {
+    scrubber.style.setProperty('--pct', ((val / 360) * 100).toFixed(1) + '%');
+  }
+  updateTrack(scrubber.value);
+
+  scrubber.addEventListener('input', () => {
+    const deg = parseFloat(scrubber.value);
+    updateTrack(deg);
+    viewer.autoRotate = false;
+    spinToggle.checked = false;
+    viewer.cameraOrbit = `${deg}deg 75deg auto`;
+  });
+
+  viewer.addEventListener('camera-change', () => {
+    if (viewer.autoRotate) {
+      const orbit = viewer.getCameraOrbit();
+      let az = (orbit.theta * 180 / Math.PI % 360 + 360) % 360;
+      scrubber.value = az.toFixed(1);
+      updateTrack(az);
+    }
+  });
+
+  document.querySelectorAll('.angle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.angle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      viewer.autoRotate = false;
+      spinToggle.checked = false;
+      if (btn.dataset.deg !== undefined) {
+        const deg = parseFloat(btn.dataset.deg);
+        scrubber.value = deg;
+        updateTrack(deg);
+        viewer.cameraOrbit = `${deg}deg 75deg auto`;
+      } else if (btn.dataset.elevation !== undefined) {
+        const el = parseFloat(btn.dataset.elevation);
+        const orbit = viewer.getCameraOrbit();
+        const az = (orbit.theta * 180 / Math.PI % 360 + 360) % 360;
+        viewer.cameraOrbit = `${az.toFixed(1)}deg ${el}deg auto`;
+      }
+    });
+  });
+
+  spinToggle.addEventListener('change', () => {
+    viewer.autoRotate = spinToggle.checked;
+    if (spinToggle.checked) document.querySelectorAll('.angle-btn').forEach(b => b.classList.remove('active'));
+  });
+
+  scrubber.addEventListener('mousedown', () => {
+    viewer.autoRotate = false;
+    spinToggle.checked = false;
+  });
+</script>
+
+</body>
+</html>
