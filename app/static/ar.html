@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>White Ornate Coffin – AR Showcase</title>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a0a;
+      color: #e8e0d0;
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      padding: 24px 32px;
+      text-align: center;
+      border-bottom: 1px solid #2a2218;
+      background: linear-gradient(180deg, #111008 0%, transparent 100%);
+    }
+
+    header h1 {
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      letter-spacing: 0.12em;
+      color: #d4b896;
+      text-transform: uppercase;
+    }
+
+    header p {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: #7a6a55;
+      letter-spacing: 0.06em;
+    }
+
+    .viewer-wrap {
+      width: 100%;
+      max-width: 900px;
+      padding: 32px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    model-viewer {
+      width: 100%;
+      height: min(70vh, 600px);
+      background: radial-gradient(ellipse at center, #1a1308 0%, #060504 100%);
+      border-radius: 16px;
+      border: 1px solid #2e2416;
+      --poster-color: transparent;
+    }
+
+    .ar-btn-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .ar-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 36px;
+      background: linear-gradient(135deg, #c8a86b 0%, #9e7a40 100%);
+      color: #0a0805;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 20px rgba(200,168,107,0.35);
+    }
+
+    .ar-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(200,168,107,0.5); }
+    .ar-btn:active { transform: translateY(0); }
+
+    .ar-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+
+    .hint {
+      font-size: 0.78rem;
+      color: #5a4f3a;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+
+    .controls-hint {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .controls-hint span {
+      font-size: 0.8rem;
+      color: #6a5c42;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .controls-hint span::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #9e7a40;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      font-size: 0.75rem;
+      color: #3a3028;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>White Ornate Coffin</h1>
+  <p>3D Model · AR Experience</p>
+</header>
+
+<div class="viewer-wrap">
+
+  <model-viewer
+    id="viewer"
+    src="/static/coffin.glb"
+    alt="White Ornate Coffin 3D model"
+    shadow-intensity="1.2"
+    shadow-softness="0.8"
+    camera-controls
+    auto-rotate
+    auto-rotate-delay="0"
+    rotation-per-second="20deg"
+    environment-image="neutral"
+    exposure="0.9"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    ar-scale="fixed"
+    ios-src="/static/coffin.glb"
+  >
+    <button
+      slot="ar-button"
+      class="ar-btn"
+      style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 3H3v2M19 3h2v2M5 21H3v-2M19 21h2v-2"/>
+        <rect x="7" y="7" width="10" height="10" rx="1"/>
+      </svg>
+      View in AR
+    </button>
+  </model-viewer>
+
+  <div class="controls-hint">
+    <span>Drag to rotate</span>
+    <span>Pinch / scroll to zoom</span>
+    <span>Right-drag to pan</span>
+  </div>
+
+  <div class="ar-btn-wrap">
+    <p class="hint">On a mobile device? Tap the button inside the viewer to place it in your space.</p>
+  </div>
+
+</div>
+
+<footer>Powered by &lt;model-viewer&gt; · WebXR / Scene Viewer / Quick Look</footer>
+
+</body>
+</html>
