@@ -9,21 +9,33 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: #080806;
-      color: #e8e0d0;
       font-family: 'Georgia', serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
+      /* Chapel room as full page background */
+      background: #080806 url('/static/room.png') center center / cover no-repeat fixed;
     }
+
+    /* dark overlay so text/UI stays readable */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 4, 2, 0.62);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    * { position: relative; z-index: 1; }
 
     header {
       width: 100%;
       padding: 22px 32px 18px;
       text-align: center;
-      border-bottom: 1px solid #221e12;
-      background: linear-gradient(180deg, #0e0c06 0%, transparent 100%);
+      background: linear-gradient(180deg, rgba(5,4,2,0.85) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(180,150,90,0.18);
     }
 
     header h1 {
@@ -31,12 +43,13 @@
       letter-spacing: 0.14em;
       color: #d4b896;
       text-transform: uppercase;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.8);
     }
 
     header p {
       margin-top: 5px;
       font-size: 0.82rem;
-      color: #6a5c3e;
+      color: #a08860;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
@@ -49,24 +62,26 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0;
     }
 
     model-viewer {
       width: 100%;
-      height: min(72vh, 620px);
-      background: radial-gradient(ellipse at 50% 60%, #1c1508 0%, #050402 100%);
+      height: min(68vh, 580px);
+      /* transparent bg so the room shows through */
+      background: transparent;
       border-radius: 18px 18px 0 0;
-      border: 1px solid #2a2210;
+      border: 1px solid rgba(180,150,90,0.25);
       border-bottom: none;
       --poster-color: transparent;
     }
 
-    /* ── 360 scrubber bar ── */
+    /* ── 360 scrubber panel ── */
     .scrubber-row {
       width: 100%;
-      background: #0d0b06;
-      border: 1px solid #2a2210;
+      background: rgba(8, 7, 4, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(180,150,90,0.22);
       border-top: none;
       border-radius: 0 0 18px 18px;
       padding: 14px 20px 16px;
@@ -77,13 +92,14 @@
     }
 
     .scrubber-label {
-      font-size: 0.7rem;
+      width: 100%;
+      font-size: 0.68rem;
       letter-spacing: 0.12em;
-      color: #5a4e34;
+      color: #7a6840;
       text-transform: uppercase;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .scrubber-label::before,
@@ -91,11 +107,8 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: linear-gradient(90deg, transparent, #3a3018);
+      background: rgba(180,150,90,0.2);
     }
-    .scrubber-label::after { background: linear-gradient(90deg, #3a3018, transparent); }
-
-    .scrubber-label-text { white-space: nowrap; }
 
     input[type=range] {
       -webkit-appearance: none;
@@ -103,7 +116,7 @@
       width: 100%;
       height: 4px;
       border-radius: 2px;
-      background: linear-gradient(90deg, #9e7a40 var(--pct, 50%), #2a2210 var(--pct, 50%));
+      background: linear-gradient(90deg, #9e7a40 var(--pct, 50%), rgba(180,150,90,0.2) var(--pct, 50%));
       outline: none;
       cursor: ew-resize;
     }
@@ -112,35 +125,34 @@
       -webkit-appearance: none;
       width: 22px; height: 22px;
       border-radius: 50%;
-      background: radial-gradient(circle at 40% 35%, #e0c080, #9e7a40);
-      border: 2px solid #080806;
-      box-shadow: 0 2px 10px rgba(158,122,64,0.6);
+      background: radial-gradient(circle at 40% 35%, #e8d090, #9e7a40);
+      border: 2px solid #080704;
+      box-shadow: 0 2px 10px rgba(158,122,64,0.7);
       cursor: ew-resize;
     }
 
     input[type=range]::-moz-range-thumb {
       width: 22px; height: 22px;
       border-radius: 50%;
-      background: radial-gradient(circle at 40% 35%, #e0c080, #9e7a40);
-      border: 2px solid #080806;
-      box-shadow: 0 2px 10px rgba(158,122,64,0.6);
+      background: radial-gradient(circle at 40% 35%, #e8d090, #9e7a40);
+      border: 2px solid #080704;
+      box-shadow: 0 2px 10px rgba(158,122,64,0.7);
       cursor: ew-resize;
     }
 
-    /* ── view angle buttons ── */
+    /* ── angle buttons ── */
     .angle-row {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 4px;
     }
 
     .angle-btn {
       padding: 5px 14px;
-      border: 1px solid #3a3018;
+      border: 1px solid rgba(180,150,90,0.3);
       background: transparent;
-      color: #8a7450;
+      color: #9a8460;
       border-radius: 20px;
       font-size: 0.72rem;
       letter-spacing: 0.06em;
@@ -151,16 +163,15 @@
 
     .angle-btn:hover, .angle-btn.active {
       background: #9e7a40;
-      color: #080806;
+      color: #080704;
       border-color: #9e7a40;
     }
 
-    /* ── auto-spin toggle ── */
+    /* ── spin toggle ── */
     .controls-row {
       display: flex;
       align-items: center;
       gap: 16px;
-      margin-top: 2px;
     }
 
     .spin-toggle {
@@ -169,7 +180,7 @@
       gap: 8px;
       cursor: pointer;
       font-size: 0.75rem;
-      color: #6a5c3e;
+      color: #7a6840;
       letter-spacing: 0.05em;
       user-select: none;
     }
@@ -179,10 +190,10 @@
     .spin-track {
       width: 36px; height: 20px;
       border-radius: 10px;
-      background: #2a2210;
+      background: rgba(180,150,90,0.15);
       position: relative;
       transition: background 0.2s;
-      border: 1px solid #3a3018;
+      border: 1px solid rgba(180,150,90,0.25);
     }
 
     .spin-track::after {
@@ -191,22 +202,22 @@
       top: 3px; left: 3px;
       width: 12px; height: 12px;
       border-radius: 50%;
-      background: #6a5c3e;
+      background: #6a5830;
       transition: transform 0.2s, background 0.2s;
     }
 
     .spin-toggle input:checked + .spin-track { background: #9e7a40; border-color: #9e7a40; }
     .spin-toggle input:checked + .spin-track::after { transform: translateX(16px); background: #fff; }
 
-    /* ── bottom section ── */
+    /* ── bottom ── */
     .bottom {
       width: 100%;
       max-width: 860px;
-      padding: 24px 16px;
+      padding: 20px 16px 28px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
     .ar-btn {
@@ -215,7 +226,7 @@
       gap: 10px;
       padding: 14px 40px;
       background: linear-gradient(135deg, #c8a86b 0%, #9e7a40 100%);
-      color: #080806;
+      color: #080704;
       border: none;
       border-radius: 50px;
       font-size: 0.95rem;
@@ -225,25 +236,26 @@
       cursor: pointer;
       text-decoration: none;
       transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 24px rgba(200,168,107,0.3);
+      box-shadow: 0 4px 28px rgba(200,168,107,0.4);
     }
 
-    .ar-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(200,168,107,0.5); }
+    .ar-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(200,168,107,0.6); }
     .ar-btn:active { transform: translateY(0); }
     .ar-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
 
     .hint {
       font-size: 0.76rem;
-      color: #4a4030;
+      color: rgba(200,180,140,0.6);
       text-align: center;
       letter-spacing: 0.03em;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
     }
 
     footer {
       margin-top: auto;
-      padding: 20px;
-      font-size: 0.72rem;
-      color: #2a2418;
+      padding: 16px;
+      font-size: 0.7rem;
+      color: rgba(140,120,80,0.4);
       text-align: center;
     }
   </style>
@@ -261,20 +273,15 @@
     id="viewer"
     src="/static/coffin.glb"
     alt="White Ornate Coffin 3D model"
-    shadow-intensity="1.4"
-    shadow-softness="0.7"
+    shadow-intensity="1.6"
+    shadow-softness="0.6"
     camera-controls
     touch-action="pan-y"
     auto-rotate
     auto-rotate-delay="0"
     rotation-per-second="18deg"
-    min-vertical-fov="25deg"
-    max-vertical-fov="90deg"
-    min-camera-orbit="auto auto auto"
-    max-camera-orbit="auto auto auto"
-    interpolation-decay="200"
     environment-image="neutral"
-    exposure="0.95"
+    exposure="1.05"
     ar
     ar-modes="webxr scene-viewer quick-look"
     ar-scale="fixed"
@@ -291,9 +298,7 @@
 
   <!-- 360 scrubber panel -->
   <div class="scrubber-row">
-    <div class="scrubber-label">
-      <span class="scrubber-label-text">360° Rotation</span>
-    </div>
+    <div class="scrubber-label">360° Rotation</div>
 
     <input type="range" id="orbitScrubber" min="0" max="360" value="180" step="1" />
 
@@ -303,7 +308,7 @@
       <button class="angle-btn" data-deg="180">Back</button>
       <button class="angle-btn" data-deg="270">Right</button>
       <button class="angle-btn" data-elevation="60">Top</button>
-      <button class="angle-btn" data-elevation="-10">Low</button>
+      <button class="angle-btn" data-elevation="-5">Low</button>
     </div>
 
     <div class="controls-row">
@@ -318,7 +323,7 @@
 </div>
 
 <div class="bottom">
-  <p class="hint">Open on your phone and tap <strong style="color:#9e7a40">View in AR</strong> to place it in your room.</p>
+  <p class="hint">Open on your phone and tap <strong style="color:#c8a86b">View in AR</strong> to place it in your space.</p>
 </div>
 
 <footer>Powered by &lt;model-viewer&gt; · WebXR / Scene Viewer / Quick Look</footer>
@@ -328,38 +333,28 @@
   const scrubber = document.getElementById('orbitScrubber');
   const spinToggle = document.getElementById('spinToggle');
 
-  // Keep scrubber CSS gradient in sync
   function updateTrack(val) {
-    const pct = ((val - 0) / 360 * 100).toFixed(1) + '%';
-    scrubber.style.setProperty('--pct', pct);
+    scrubber.style.setProperty('--pct', ((val / 360) * 100).toFixed(1) + '%');
   }
   updateTrack(scrubber.value);
 
-  // Scrubber → viewer orbit (horizontal only, keep elevation & radius)
   scrubber.addEventListener('input', () => {
     const deg = parseFloat(scrubber.value);
     updateTrack(deg);
-    const cur = viewer.getCameraOrbit();
-    // stop auto-rotate while dragging
     viewer.autoRotate = false;
     spinToggle.checked = false;
-    viewer.cameraOrbit = `${deg}deg ${cur.theta}rad ${cur.radius}m`;
-    // use azimuthal angle
     viewer.cameraOrbit = `${deg}deg 75deg auto`;
   });
 
-  // Viewer orbit → scrubber sync (while auto-rotating)
   viewer.addEventListener('camera-change', () => {
     if (viewer.autoRotate) {
       const orbit = viewer.getCameraOrbit();
-      // theta in radians → degrees, normalize 0-360
-      let azimuth = (orbit.theta * 180 / Math.PI % 360 + 360) % 360;
-      scrubber.value = azimuth.toFixed(1);
-      updateTrack(azimuth);
+      let az = (orbit.theta * 180 / Math.PI % 360 + 360) % 360;
+      scrubber.value = az.toFixed(1);
+      updateTrack(az);
     }
   });
 
-  // Angle preset buttons
   document.querySelectorAll('.angle-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.angle-btn').forEach(b => b.classList.remove('active'));
@@ -374,14 +369,13 @@
         viewer.cameraOrbit = `${deg}deg 75deg auto`;
       } else if (btn.dataset.elevation !== undefined) {
         const el = parseFloat(btn.dataset.elevation);
-        const cur = viewer.getCameraOrbit();
-        const azimuth = (cur.theta * 180 / Math.PI % 360 + 360) % 360;
-        viewer.cameraOrbit = `${azimuth.toFixed(1)}deg ${el}deg auto`;
+        const orbit = viewer.getCameraOrbit();
+        const az = (orbit.theta * 180 / Math.PI % 360 + 360) % 360;
+        viewer.cameraOrbit = `${az.toFixed(1)}deg ${el}deg auto`;
       }
     });
   });
 
-  // Auto-spin toggle
   spinToggle.addEventListener('change', () => {
     viewer.autoRotate = spinToggle.checked;
     if (spinToggle.checked) {
@@ -389,7 +383,6 @@
     }
   });
 
-  // Touch drag on scrubber also pauses spin
   scrubber.addEventListener('mousedown', () => {
     viewer.autoRotate = false;
     spinToggle.checked = false;
